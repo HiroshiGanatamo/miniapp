@@ -1,287 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Telegram Mini Apps Vanilla JS Sample App</title>
-    <style>
-      /* styles.css */
-      body {
-        --bg-color: var(--tg-theme-bg-color);
-        font-family: "Roboto", sans-serif;
-        background-color: var(--bg-color);
-        color: #333;
-        margin: 0;
-        padding: 20px;
-      }
+document.addEventListener("DOMContentLoaded", () => {
+  const fromTokenDropdown = document.getElementById("from-token-dropdown");
+  const fromTokenOptions = document.getElementById("from-token-options");
+  const fromTokenImage = document.getElementById("from-token-image");
+  const fromTokenName = document.getElementById("from-token-name");
 
-      header {
-        text-align: center;
-        margin-bottom: 30px;
-      }
+  if (!fromTokenDropdown || !fromTokenOptions) {
+    console.error("Dropdown elements not found in the DOM");
+    return;
+  }
 
-      h1 {
-        font-size: 24px;
-        color: #333;
-      }
+  fromTokenDropdown.addEventListener("click", () => {
+    fromTokenOptions.classList.toggle("active");
+    fromTokenDropdown.classList.toggle("open");
+  });
 
-      .form-group {
-        display: flex;
-        margin-bottom: 1rem;
-        align-items: center;
+  fetch(
+    "https://api.changenow.io/v2/exchange/currencies?active=&flow=standard&buy=&sell="
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      .form-group-inline {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-      }
+      return response.json();
+    })
+    .then((data) => {
+      populateSelect(fromTokenOptions, data);
+      // If you have a "to-token-dropdown" you'll need to fetch and populate it similarly
+    })
+    .catch((error) => console.error("Error fetching data:", error));
 
-      .form-group-inline label,
-      .form-group-inline .input-group {
-        flex: 1;
-      }
-
-      .input-group input,
-      .input-group select {
-        flex: 1;
-      }
-
-      .inline-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-
-      /* Style for select element */
-      .inline-group select {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-        border-right: none;
-      }
-
-      /* Style for input elements when they are side by side with select */
-      .inline-group input[type="number"],
-      .inline-group input[type="text"] {
-        flex: 1;
-        margin-left: -1px; /* Aligns the input with the select */
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-      }
-
-      /* Remove right margin from the last element in a flex container */
-      .inline-group > :last-child {
-        margin-right: 0;
-      }
-
-      /* Adjust the width of select elements so they don't stretch */
-      .inline-group select {
-        width: 10vw;
-      }
-
-      /* Set flex-grow for select elements so they fit content */
-      .inline-group select {
-        flex-grow: 0;
-      }
-
-      /* Make sure the input grows to use up remaining space */
-      .inline-group input[type="number"],
-      .inline-group input[type="text"] {
-        flex-grow: 3;
-      }
-
-      /* Ensure that the select and input line up correctly */
-      .inline-group select,
-      .inline-group input[type="number"],
-      .inline-group input[type="text"] {
-        height: 40px; /* Adjust the height to match the ChangeNow UI */
-      }
-
-      /* Style for the select and input elements to appear inline */
-      .inline-group > select,
-      .inline-group > input {
-        flex: 1;
-        border-radius: 5px;
-        border: none;
-        border: 1px solid #dce2ea;
-      }
-
-      /* Last child doesn't need a right margin */
-      .inline-group > select:last-child,
-      .inline-group > input:last-child {
-        margin-right: 0;
-        padding: 0;
-      }
-
-      /* Placeholder text inside input/select */
-      .with-placeholder::placeholder {
-        color: #999;
-      }
-
-      /* Make sure the button matches the design */
-      button[type="submit"] {
-        background-color: #4caf50; /* ChangeNow button color */
-        color: white;
-        border: none;
-        padding: 15px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 20px; /* Space from the last input */
-        width: 100%;
-      }
-
-      button[type="submit"]:hover {
-        background-color: #45a049; /* Darker shade for hover effect */
-      }
-
-      /* The wrapping form-group for alignment */
-      .form-group {
-        margin-bottom: 20px;
-        border-radius: 5px;
-      }
-
-      /* Label color adjustment to match the design */
-      label {
-        color: #888; /* Lighter color for the labels */
-      }
-
-      /* Custom dropdown styling */
-      .custom-select {
-        position: relative;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 10px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .custom-select img {
-        width: 21px;
-        margin-right: 10px;
-        height: 21px;
-      }
-
-      .custom-options {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 10px;
-        background-color: white;
-        display: none; /* Hide by default, will be shown by JS */
-        z-index: 10;
-      }
-
-      .custom-options.active {
-        display: block; /* Show options */
-      }
-
-      /* SVG Arrow */
-      .custom-select svg {
-        transition: transform 0.2s ease;
-      }
-
-      .custom-select.open svg {
-        transform: rotate(180deg);
-      }
-
-      .custom-select-search {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        margin-top: 10px;
-      }
-
-      /* Hide the search box initially */
-      .custom-select-search {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app">
-      <header>
-        <h1 style="color: #9945ff">Sol X Swap</h1>
-      </header>
-      <main style="max-width: 640px; margin: auto">
-        <section id="exchange-form">
-          <form id="swap-form">
-            <div class="form-group inline-group">
-              <div class="custom-select" id="from-token-dropdown">
-                <img
-                  src="path/to/default-image.svg"
-                  id="from-token-image"
-                  alt="Selected Token"
-                />
-                <span id="from-token-name">Select token</span>
-                <svg width="12" height="6" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M.343 0h11.314L6 5.657" fill-rule="evenodd"></path>
-                </svg>
-                <input
-                  type="text"
-                  id="from-token-search"
-                  placeholder="Type a currency"
-                  class="custom-select-search"
-                />
-                <div class="custom-options" id="from-token-options">
-                  <!-- Currency options will go here -->
-                </div>
-              </div>
-              <input
-                type="number"
-                id="from-amount"
-                name="from-amount"
-                placeholder="You Send"
-                required
-              />
-              <div class="custom-options" id="from-token-options">
-                <!-- Options will be populated by JS -->
-              </div>
-            </div>
-            <div class="form-group inline-group">
-              <select
-                id="to-token"
-                name="to-token"
-                required
-                class="with-placeholder"
-              ></select>
-              <input
-                type="text"
-                id="to-amount"
-                name="to-amount"
-                placeholder="You Get"
-                readonly
-              />
-            </div>
-            <div class="form-group">
-              <label
-                for="recipient-wallet"
-                style="white-space: nowrap; padding-inline: 15px"
-                >Recipient Wallet:</label
-              >
-              <input
-                type="text"
-                id="recipient-wallet"
-                name="recipient-wallet"
-                placeholder="Enter the ETH payout address"
-                required=""
-                style="padding: 10px; width: 100%"
-              />
-            </div>
-            <button type="submit">Swap Now</button>
-          </form>
-        </section>
-      </main>
-    </div>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="script.js"></script>
-  </body>
-</html>
+  function populateSelect(optionsContainer, currencies) {
+    optionsContainer.innerHTML = ""; // Clear existing options
+    currencies.forEach((currency) => {
+      const optionElement = document.createElement("div");
+      optionElement.className = "custom-option";
+      optionElement.innerHTML = `
+          <img src="${currency.image}" alt="${currency.ticker}" class="currency-icon">
+          <span>${currency.ticker}</span>
+        `;
+      optionElement.addEventListener("click", function () {
+        fromTokenImage.src = currency.image;
+        fromTokenImage.alt = currency.ticker;
+        fromTokenName.textContent = currency.ticker;
+        fromTokenOptions.classList.remove("active");
+        fromTokenDropdown.classList.remove("open");
+        // Update any hidden input fields or form data here as needed
+      });
+      optionsContainer.appendChild(optionElement);
+    });
+  }
+});
