@@ -104,7 +104,6 @@
       .inline-group > select,
       .inline-group > input {
         flex: 1;
-        margin-right: 8px; /* Space between select and input */
         border-radius: 5px;
         border: none;
         border: 1px solid #dce2ea;
@@ -214,6 +213,15 @@
                 <svg width="12" height="6" xmlns="http://www.w3.org/2000/svg">
                   <path d="M.343 0h11.314L6 5.657" fill-rule="evenodd"></path>
                 </svg>
+                <input
+                  type="text"
+                  id="from-token-search"
+                  placeholder="Type a currency"
+                  class="custom-select-search"
+                />
+                <div class="custom-options" id="from-token-options">
+                  <!-- Currency options will go here -->
+                </div>
               </div>
               <input
                 type="number"
