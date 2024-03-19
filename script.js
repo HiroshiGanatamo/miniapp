@@ -1,49 +1,52 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM fully loaded and parsed");
+  const fromTokenDropdown = document.getElementById("from-token-dropdown");
+  const fromTokenOptions = document.getElementById("from-token-options");
+  const fromTokenImage = document.getElementById("from-token-image");
+  const fromTokenName = document.getElementById("from-token-name");
 
-  const fromTokenOptionsContainer =
-    document.getElementById("from-token-options");
-  const toTokenOptionsContainer = document.getElementById("to-token-options");
-
-  console.log("fromTokenOptionsContainer:", fromTokenOptionsContainer);
-  console.log("toTokenOptionsContainer:", toTokenOptionsContainer);
-
-  if (!fromTokenOptionsContainer || !toTokenOptionsContainer) {
-    console.error("Dropdown options containers not found in the DOM");
-    return; // Stop the function if elements are not found
+  if (!fromTokenDropdown || !fromTokenOptions) {
+    console.error("Dropdown elements not found in the DOM");
+    return;
   }
+
+  fromTokenDropdown.addEventListener("click", () => {
+    fromTokenOptions.classList.toggle("active");
+    fromTokenDropdown.classList.toggle("open");
+  });
 
   fetch(
     "https://api.changenow.io/v2/exchange/currencies?active=&flow=standard&buy=&sell="
   )
-    .then((response) => response.json())
-    .then((data) => {
-      populateSelect(fromTokenOptionsContainer, data);
-      populateSelect(toTokenOptionsContainer, data);
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
     })
-    .catch((error) => console.error("Error fetching data: ", error));
+    .then((data) => {
+      populateSelect(fromTokenOptions, data);
+      // If you have a "to-token-dropdown" you'll need to fetch and populate it similarly
+    })
+    .catch((error) => console.error("Error fetching data:", error));
 
   function populateSelect(optionsContainer, currencies) {
     optionsContainer.innerHTML = ""; // Clear existing options
     currencies.forEach((currency) => {
-      let option = document.createElement("div");
-      option.className = "custom-option";
-      option.innerHTML = `
+      const optionElement = document.createElement("div");
+      optionElement.className = "custom-option";
+      optionElement.innerHTML = `
           <img src="${currency.image}" alt="${currency.name}" class="currency-icon">
           <span>${currency.name}</span>
         `;
-      option.dataset.value = currency.ticker;
-      option.addEventListener("click", function () {
-        let dropdown = this.closest(".custom-select");
-        let img = dropdown.querySelector("img");
-        let span = dropdown.querySelector("span");
-        img.src = currency.image;
-        img.alt = currency.name;
-        span.textContent = currency.name;
-        optionsContainer.classList.remove("active");
-        // Optionally handle updating hidden input values here
+      optionElement.addEventListener("click", function () {
+        fromTokenImage.src = currency.image;
+        fromTokenImage.alt = currency.name;
+        fromTokenName.textContent = currency.name;
+        fromTokenOptions.classList.remove("active");
+        fromTokenDropdown.classList.remove("open");
+        // Update any hidden input fields or form data here as needed
       });
-      optionsContainer.appendChild(option);
+      optionsContainer.appendChild(optionElement);
     });
   }
 });
