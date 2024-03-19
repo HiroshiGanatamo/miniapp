@@ -1,11 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM fully loaded and parsed");
+
   const fromTokenOptionsContainer =
     document.getElementById("from-token-options");
   const toTokenOptionsContainer = document.getElementById("to-token-options");
 
+  console.log("fromTokenOptionsContainer:", fromTokenOptionsContainer);
+  console.log("toTokenOptionsContainer:", toTokenOptionsContainer);
+
   if (!fromTokenOptionsContainer || !toTokenOptionsContainer) {
     console.error("Dropdown options containers not found in the DOM");
-    return; // Exit the function if elements are not found
+    return; // Stop the function if elements are not found
   }
 
   fetch(
