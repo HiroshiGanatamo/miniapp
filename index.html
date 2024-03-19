@@ -29,7 +29,63 @@
       }
 
       .form-group {
-        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+      }
+      .form-group-inline {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .form-group-inline label,
+      .form-group-inline .input-group {
+        flex: 1;
+      }
+
+      .input-group input,
+      .input-group select {
+        flex: 1;
+      }
+
+      .input-group {
+        display: flex;
+      }
+
+      input[type="number"],
+      input[type="text"],
+      select {
+        margin: 0;
+        border-radius: 0;
+        border: 1px solid #ccc;
+        /* Remove default styles for number input */
+        -moz-appearance: textfield;
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+      }
+
+      input[type="text"].with-placeholder::placeholder,
+      input[type="number"].with-placeholder::placeholder {
+        color: #ccc;
+      }
+
+      .input-group input[type="text"]:first-child,
+      .input-group select:first-child {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-right: none;
+      }
+
+      .input-group input[type="text"]:last-child,
+      .input-group input[type="number"]:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
       }
 
       label {
@@ -37,17 +93,6 @@
         margin-bottom: 5px;
         font-weight: bold;
         color: #333;
-      }
-
-      input[type="number"],
-      input[type="text"],
-      select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
       }
 
       input[type="number"]:focus,
@@ -98,20 +143,33 @@
       <main>
         <section id="exchange-form">
           <form id="swap-form">
-            <div class="form-group">
-              <label for="from-token">You Send:</label>
-              <select id="from-token" name="from-token" required></select>
-              <input
-                type="number"
-                id="from-amount"
-                name="from-amount"
-                required
-              />
+            <div class="form-group-inline">
+              <label for="from-amount" class="sr-only">You Send:</label>
+              <div class="input-group">
+                <select id="from-token" name="from-token" required></select>
+                <input
+                  type="number"
+                  id="from-amount"
+                  name="from-amount"
+                  class="with-placeholder"
+                  placeholder="You Send"
+                  required
+                />
+              </div>
             </div>
-            <div class="form-group">
-              <label for="to-token">You Get:</label>
-              <select id="to-token" name="to-token" required></select>
-              <input type="text" id="to-amount" name="to-amount" readonly />
+            <div class="form-group-inline">
+              <label for="to-amount" class="sr-only">You Get:</label>
+              <div class="input-group">
+                <select id="to-token" name="to-token" required></select>
+                <input
+                  type="text"
+                  id="to-amount"
+                  name="to-amount"
+                  class="with-placeholder"
+                  placeholder="You Get"
+                  readonly
+                />
+              </div>
             </div>
             <div class="form-group">
               <label for="recipient-wallet">Recipient Wallet:</label>
@@ -129,6 +187,5 @@
       <script src="https://telegram.org/js/telegram-web-app.js"></script>
       <script src="script.js"></script>
     </div>
-    <!-- Include your styles.css and script.js files -->
   </body>
 </html>
