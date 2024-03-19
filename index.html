@@ -149,6 +149,49 @@
       label {
         color: #888; /* Lighter color for the labels */
       }
+
+      /* Custom dropdown styling */
+      .custom-select {
+        position: relative;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .custom-select img {
+        width: 20px;
+        margin-right: 10px;
+      }
+
+      .custom-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        background-color: white;
+        display: none; /* Hide by default, will be shown by JS */
+        z-index: 10;
+      }
+
+      .custom-options.active {
+        display: block; /* Show options */
+      }
+
+      /* SVG Arrow */
+      .custom-select svg {
+        transition: transform 0.2s ease;
+      }
+
+      .custom-select.open svg {
+        transform: rotate(180deg);
+      }
     </style>
   </head>
   <body>
@@ -160,12 +203,17 @@
         <section id="exchange-form">
           <form id="swap-form">
             <div class="form-group inline-group">
-              <select
-                id="from-token"
-                name="from-token"
-                required
-                class="with-placeholder"
-              ></select>
+              <div class="custom-select" id="from-token-dropdown">
+                <img
+                  src="path/to/default-image.svg"
+                  id="from-token-image"
+                  alt="Selected Token"
+                />
+                <span id="from-token-name">Select token</span>
+                <svg width="12" height="6" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M.343 0h11.314L6 5.657" fill-rule="evenodd"></path>
+                </svg>
+              </div>
               <input
                 type="number"
                 id="from-amount"
@@ -173,6 +221,9 @@
                 placeholder="You Send"
                 required
               />
+              <div class="custom-options" id="from-token-options">
+                <!-- Options will be populated by JS -->
+              </div>
             </div>
             <div class="form-group inline-group">
               <select
