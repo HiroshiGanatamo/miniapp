@@ -152,6 +152,7 @@
       /* Custom dropdown styling */
       .custom-select {
         position: relative;
+        width: 100%;
         border: 1px solid #ccc;
         border-radius: 4px;
         padding: 10px;
@@ -161,8 +162,21 @@
         justify-content: space-between;
       }
 
+      /* When the dropdown is active, adjust the styles as follows */
       .custom-select.open {
-        width: calc(100% - 20px); /* Adjusted width to account for padding */
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      /* When the dropdown is active, adjust the styles as follows */
+      .custom-select.open {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .custom-select.open + .custom-options,
+      .custom-select.open .custom-select-search {
+        display: block; /* Show dropdown and search when open */
       }
 
       .custom-select img {
@@ -172,8 +186,9 @@
       }
 
       .custom-options {
+        display: none; /* Initially hidden */
         position: absolute;
-        top: 100%;
+        top: 50px; /* Height of the select box plus any additional space */
         left: 0;
         width: 100%; /* Match the width of the form container */
         border: 1px solid #ccc;
@@ -185,6 +200,8 @@
         box-sizing: border-box; /* Include padding and border in the element's total width and height */
         overflow: auto; /* In case of scrolling */
         max-height: 300px; /* Set a max-height for the dropdown and make it scrollable */
+        overflow-y: auto; /* Add scroll for overflow */
+        z-index: 10;
       }
       .custom-options.active {
         display: block; /* Show options */
@@ -200,15 +217,12 @@
       }
 
       .custom-select-search {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        margin-top: 10px;
-      }
-
-      /* Hide the search box initially */
-      .custom-select-search {
-        display: none;
+        display: none; /* Initially hidden */
+        position: absolute;
+        top: 100%;
+        width: calc(100% - 20px); /* Full width minus padding */
+        box-sizing: border-box;
+        z-index: 5;
       }
     </style>
   </head>
