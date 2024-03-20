@@ -1,39 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const dropdownTriggers = document.querySelectorAll(".combobox--field");
+  const fromTokenDropdown = document.getElementById("from-token-dropdown");
+  const fromTokenOptions = document.getElementById("from-token-options");
 
-  // Function to close all dropdowns
-  function closeAllDropdowns() {
-    document.querySelectorAll(".combobox--dropdown").forEach((list) => {
-      list.style.display = "none"; // Hide the dropdown list
+  // Fetch and populate the list of tokens
+  fetchTokens();
+
+  // Event listener for opening the dropdown
+  fromTokenDropdown.addEventListener("click", function () {
+    // Toggle dropdown here
+    fromTokenOptions.style.display =
+      fromTokenOptions.style.display === "block" ? "none" : "block";
+  });
+
+  // Function to fetch tokens and populate the dropdown
+  function fetchTokens() {
+    fetch(
+      "https://api.changenow.io/v2/exchange/currencies?active=&flow=standard&buy=&sell="
+    )
+      .then((response) => response.json())
+      .then((data) => populateDropdown(data))
+      .catch((error) => console.error("Error fetching tokens:", error));
+  }
+
+  // Function to populate the dropdown with token data
+  function populateDropdown(data) {
+    data.forEach((token) => {
+      const option = document.createElement("div");
+      option.className = "dropdown-option";
+      option.innerHTML = `
+          <img src="${token.image}" alt="${token.name}" class="currency-icon">
+          <span>${token.name}</span>
+        `;
+      option.addEventListener("click", function () {
+        // Set the selected token somewhere in your app's state
+      });
+      fromTokenOptions.appendChild(option);
     });
   }
 
-  // Event listeners for each dropdown trigger
-  dropdownTriggers.forEach((trigger) => {
-    trigger.addEventListener("click", (event) => {
-      // Close all dropdowns first
-      closeAllDropdowns();
-
-      // Access the next sibling that should be the dropdown list
-      const dropdown = trigger.parentNode.querySelector(".combobox--dropdown");
-      if (dropdown) {
-        // If the dropdown exists, toggle its display
-        dropdown.style.display =
-          dropdown.style.display === "block" ? "none" : "block";
-        event.stopPropagation(); // Stop the click from closing the dropdown immediately
-      } else {
-        console.error("Dropdown element not found next to the trigger.");
-      }
-    });
-  });
-
-  // Clicking outside the dropdowns closes them
-  document.addEventListener("click", closeAllDropdowns);
-
-  // Prevent clicks within the dropdown from closing it
-  document.querySelectorAll(".combobox--dropdown").forEach((list) => {
-    list.addEventListener("click", (event) => {
-      event.stopPropagation();
-    });
+  // Clicking outside the dropdown closes it
+  window.addEventListener("click", function (event) {
+    if (!fromTokenDropdown.contains(event.target)) {
+      fromTokenOptions.style.display = "none";
+    }
   });
 });
