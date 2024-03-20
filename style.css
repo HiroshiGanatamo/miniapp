@@ -1,0 +1,33 @@
+.exchange-stepper--panel {
+  padding: 35px 70px;
+  background-color: #fff;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.set-transaction-step--content {
+  width: 100%;
+}
+
+.exchange-stepper--attention-title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: 0.043196px;
+  margin-bottom: 22px;
+  margin-top: 0;
+  color: #a4a3aa;
+}
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 0.2em;
+  font-weight: 400;
+  font-size: 36px;
+  color: #2b2b36;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
