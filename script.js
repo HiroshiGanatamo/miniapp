@@ -44,13 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const optionElement = document.createElement("div");
         optionElement.className = "custom-option";
         optionElement.innerHTML = `
-          <img src="${currency.image}" alt="${currency.name}" class="currency-icon">
-          <span>${currency.name}</span>
+          <img src="${currency.image}" alt="${currency.ticker}" class="currency-icon">
+          <span>${currency.ticker}</span>
         `;
         optionElement.addEventListener("click", function () {
           fromTokenImage.src = currency.image;
-          fromTokenImage.alt = currency.name;
-          fromTokenName.textContent = currency.name;
+          fromTokenImage.alt = currency.ticker;
+          fromTokenName.textContent = currency.ticker;
           fromTokenOptions.classList.remove("active");
           fromTokenDropdown.classList.remove("open");
           fromTokenSearch.style.display = "none"; // Hide search input when an option is selected
