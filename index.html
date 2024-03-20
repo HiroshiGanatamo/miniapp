@@ -233,73 +233,15 @@
         <h1 style="color: #9945ff">Sol X Swap</h1>
       </header>
       <main style="max-width: 640px; margin: auto">
-        <section id="exchange-form">
-          <form id="swap-form">
-            <div class="form-group inline-group">
-              <div class="custom-select" id="from-token-dropdown">
-                <img
-                  src="path/to/default-image.svg"
-                  id="from-token-image"
-                  alt="Selected Token"
-                />
-                <span id="from-token-name">Select token</span>
-                <svg width="12" height="6" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M.343 0h11.314L6 5.657" fill-rule="evenodd"></path>
-                </svg>
-                <input
-                  type="text"
-                  id="from-token-search"
-                  placeholder="Type a currency"
-                  class="custom-select-search"
-                />
-                <div class="custom-options" id="from-token-options">
-                  <!-- Currency options will go here -->
-                </div>
-              </div>
-              <input
-                type="number"
-                id="from-amount"
-                name="from-amount"
-                placeholder="You Send"
-                required
-              />
-              <div class="custom-options" id="from-token-options">
-                <!-- Options will be populated by JS -->
-              </div>
-            </div>
-            <div class="form-group inline-group">
-              <select
-                id="to-token"
-                name="to-token"
-                required
-                class="with-placeholder"
-              ></select>
-              <input
-                type="text"
-                id="to-amount"
-                name="to-amount"
-                placeholder="You Get"
-                readonly
-              />
-            </div>
-            <div class="form-group">
-              <label
-                for="recipient-wallet"
-                style="white-space: nowrap; padding-inline: 15px"
-                >Recipient Wallet:</label
-              >
-              <input
-                type="text"
-                id="recipient-wallet"
-                name="recipient-wallet"
-                placeholder="Enter the ETH payout address"
-                required=""
-                style="padding: 10px; width: 100%"
-              />
-            </div>
-            <button type="submit">Swap Now</button>
-          </form>
-        </section>
+        <div
+          class="set-transaction-step exchange-stepper--step exchange-stepper--panel"
+        >
+          <div class="set-transaction-step--content">
+            <h1 class="exchange-stepper--attention-title">
+              Please fill in transaction details
+            </h1>
+          </div>
+        </div>
       </main>
     </div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
