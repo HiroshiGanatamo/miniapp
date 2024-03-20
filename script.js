@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const dropdownTriggers = document.querySelectorAll(".combobox--field");
-  const dropdownLists = document.querySelectorAll(".combobox--dropdown");
 
   // Function to close all dropdowns
   function closeAllDropdowns() {
-    dropdownLists.forEach((list) => {
+    document.querySelectorAll(".combobox--dropdown").forEach((list) => {
       list.style.display = "none"; // Hide the dropdown list
     });
   }
@@ -12,10 +11,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // Event listeners for each dropdown trigger
   dropdownTriggers.forEach((trigger) => {
     trigger.addEventListener("click", (event) => {
-      closeAllDropdowns(); // Close all dropdowns first
-      const dropdown = trigger.nextElementSibling; // Assuming the dropdown is the next sibling
-      dropdown.style.display = "block"; // Show the dropdown list
-      event.stopPropagation(); // Stop the click from closing the dropdown immediately
+      // Close all dropdowns first
+      closeAllDropdowns();
+
+      // Access the next sibling that should be the dropdown list
+      const dropdown = trigger.parentNode.querySelector(".combobox--dropdown");
+      if (dropdown) {
+        // If the dropdown exists, toggle its display
+        dropdown.style.display =
+          dropdown.style.display === "block" ? "none" : "block";
+        event.stopPropagation(); // Stop the click from closing the dropdown immediately
+      } else {
+        console.error("Dropdown element not found next to the trigger.");
+      }
     });
   });
 
@@ -23,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", closeAllDropdowns);
 
   // Prevent clicks within the dropdown from closing it
-  dropdownLists.forEach((list) => {
+  document.querySelectorAll(".combobox--dropdown").forEach((list) => {
     list.addEventListener("click", (event) => {
       event.stopPropagation();
     });
